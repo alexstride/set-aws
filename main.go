@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"os"
 )
 
@@ -39,16 +40,16 @@ func main() {
 	var assumeRoleOutput AssumeRoleOutput
 	err = json.Unmarshal(inputString, &assumeRoleOutput)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	if assumeRoleOutput.AccessKeyId == "" {
-		panic("AccessKeyId is empty")
+		log.Fatal("AccessKeyId is empty")
 	}
 	if assumeRoleOutput.AccessKeyId == "" {
-		panic("SecretAccessKey is empty")
+		log.Fatal("SecretAccessKey is empty")
 	}
 	if assumeRoleOutput.AccessKeyId == "" {
-		panic("SessionToken is empty")
+		log.Fatal("SessionToken is empty")
 	}
 
 	fmt.Printf(`
