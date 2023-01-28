@@ -14,11 +14,22 @@ type AssumeRoleOutput struct {
 	Expiration      string
 }
 
+func (a *AssumeRoleOutput) UnmarshalJSON(b []byte) error {
+	var v map[string]interface{}
+	err := json.Unmarshal(b, &v)
+	if err != nil {
+		return err
+	}
+	a.AccessKeyId = v["Credentials"].(map[string]interface{})["AccessKeyId"].(string)
+	a.SecretAccessKey = v["Credentials"].(map[string]interface{})["SecretAccessKey"].(string)
+	a.SessionToken = v["Credentials"].(map[string]interface{})["SessionToken"].(string)
+	a.Expiration = v["Credentials"].(map[string]interface{})["Expiration"].(string)
+	return nil
+}
+
 func main() {
 
 	inputString, err := io.ReadAll(os.Stdin)
-
-	fmt.Println("Input string: ", string(inputString))
 
 	if err != nil {
 		panic(err)
@@ -29,6 +40,15 @@ func main() {
 	err = json.Unmarshal(inputString, &assumeRoleOutput)
 	if err != nil {
 		panic(err)
+	}
+	if assumeRoleOutput.AccessKeyId == "" {
+		panic("AccessKeyId is empty")
+	}
+	if assumeRoleOutput.AccessKeyId == "" {
+		panic("SecretAccessKey is empty")
+	}
+	if assumeRoleOutput.AccessKeyId == "" {
+		panic("SessionToken is empty")
 	}
 
 	fmt.Printf(`
